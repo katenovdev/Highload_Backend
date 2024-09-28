@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+    <h1>{{ post.title }}</h1>
+    <p><strong>Author:</strong> {{ post.author.username }}</p>
+    <p><strong>Created on:</strong> {{ post.created_date }}</p>
+    <div>
+        <p>{{ post.content }}</p>
+    </div>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in post.comment_set.all %}
+            <li>
+                <strong>{{ comment.author.username }}</strong>: {{ comment.content }} <em>({{ comment.created_date }})</em>
+            </li>
+        {% empty %}
+            <li>No comments yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Add a Comment</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}  <!-- This should render the input field -->
+        <button type="submit">Add Comment</button>
+    </form>
+
+    <a href="{% url 'post_list' %}">Back to Post List</a>
+</body>
+</html>

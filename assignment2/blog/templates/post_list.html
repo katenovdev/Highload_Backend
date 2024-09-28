@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post List</title>
+</head>
+<body>
+    <h1>Posts</h1>
+    <a href="{% url 'post_create' %}">Create New Post</a>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <p>Tags: {{ post.tags.all|join:", " }}</p>
+                <h3>Comments:</h3>
+                <ul>
+                    {% for comment in post.comments.all %}
+                        <li>{{ comment.content }} - {{ comment.author.username }}</li>
+                    {% endfor %}
+                </ul>
+                <form action="{% url 'comment_create' post.id %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Add Comment</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
