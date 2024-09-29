@@ -18,8 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from blog.views import *
 
+from django.http import HttpResponse
+
+def health_check(request):
+    return HttpResponse("Healthy", status=200)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('health/', health_check, name='health_check'),
     path('accounts/register/', UserRegistrationView.as_view(), name='register'),
     path('accounts/login/', UserLoginView.as_view(), name='login'),
     path('blog/', include('blog.urls')), 
