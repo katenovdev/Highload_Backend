@@ -1,17 +1,27 @@
-version: "3.7"
-
 services:
-  db:
-    image: postgres:12-alpine
-    ports:
-      - "5432:5432"
+  db_primary:
+    image: postgres:15-alpine
+    container_name: postgres_primary
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
 
-volumes:
-  postgres_data: {}
+  db_replica:
+    image: postgres:15-alpine
+    container_name: postgres_replica
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    depends_on:
+      - db_primary
+    ports:
+      - "5433:5432"
+
+
